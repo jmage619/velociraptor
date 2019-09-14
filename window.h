@@ -56,6 +56,9 @@ class Window: public QWidget {
     //jack_port_t * out_r;
     jack_port_t* input_port;
     jack_port_t* output_port;
+    std::atomic<float> gain;
+    std::atomic<float> thresh;
+    std::atomic<float> ratio;
     std::atomic<int> note;
     std::atomic<int> in_vel;
     std::atomic<int> out_vel;
@@ -64,9 +67,9 @@ class Window: public QWidget {
 
   public slots:
     void updateDisplay();
-    void updateGainLabel(int val);
-    void updateThreshLabel(int val);
-    void updateRatioLabel(int val);
+    void updateGain(int val);
+    void updateThresh(int val);
+    void updateRatio(int val);
 };
 
 #endif

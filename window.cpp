@@ -45,9 +45,17 @@ int process(jack_nframes_t nframes, void* data) {
     jack_midi_event_get(&event, midi_in_buf, i);
 
     if ((event.buffer[0] & 0xf0) == 0x90) {
+      int in_vel = event.buffer[2];
       //cout << "note on; " << "note=" << (int) event.buffer[1] << "; vel=" << (int) event.buffer[2] << endl;
+      float in_db = 20.f * log10f(event.buffer[2] / 127.f);
+      if (in_db > window->thresh) {
+        float out_db = in_db + window->gain - (1.f - 1.f / window->ratio) * (in_db - window->thresh);
+        jack_midi_data_t out = (jack_midi_data_t) roundf(127.f* powf(10.f, out_db / 20.f));
+        event.buffer[2] = out <= 127 ? out: 127;
+      }
+
       window->note = event.buffer[1];
-      window->in_vel = event.buffer[2];
+      window->in_vel = in_vel;
       window->out_vel = event.buffer[2];
     }
     jack_midi_event_write(midi_out_buf, event.time, event.buffer, event.size);
@@ -56,7 +64,7 @@ int process(jack_nframes_t nframes, void* data) {
   return 0;
 }
 
-Window::Window(): note(0), in_vel(0), out_vel(0) {
+Window::Window(): gain(0.f), thresh(0.f), ratio(1.f), note(0), in_vel(0), out_vel(0) {
   QVBoxLayout* v_layout = new QVBoxLayout;
 
   // note display
@@ -165,9 +173,9 @@ Window::Window(): note(0), in_vel(0), out_vel(0) {
 
   timer = new QTimer(this);
   connect(timer, &QTimer::timeout, this, &Window::updateDisplay);
-  connect(gain_slider, &QSlider::valueChanged, this, &Window::updateGainLabel);
-  connect(thresh_slider, &QSlider::valueChanged, this, &Window::updateThreshLabel);
-  connect(ratio_slider, &QSlider::valueChanged, this, &Window::updateRatioLabel);
+  connect(gain_slider, &QSlider::valueChanged, this, &Window::updateGain);
+  connect(thresh_slider, &QSlider::valueChanged, this, &Window::updateThresh);
+  connect(ratio_slider, &QSlider::valueChanged, this, &Window::updateRatio);
   timer->start(20);
 
   // init jack garbage
@@ -213,14 +221,17 @@ void Window::updateDisplay() {
   out_vel_label->setText(QString::number(out_vel));
 }
 
-void Window::updateGainLabel(int val) {
+void Window::updateGain(int val) {
+  gain = val;
   gain_label->setText(QString::number(val) + " (db)");
 }
 
-void Window::updateThreshLabel(int val) {
+void Window::updateThresh(int val) {
+  thresh = val;
   thresh_label->setText(QString::number(val) + " (db)");
 }
 
-void Window::updateRatioLabel(int val) {
+void Window::updateRatio(int val) {
+  ratio = val;
   ratio_label->setText(QString::number(val) + ":1");
 }

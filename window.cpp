@@ -66,6 +66,8 @@ Window::Window(): note(0), in_vel(0) {
   h_layout->addWidget(label);
 
   note_label = new QLabel;
+  note_label->setMinimumWidth(30);
+  note_label->setAlignment(Qt::AlignRight);
   h_layout->addWidget(note_label);
 
   label = new QLabel;
@@ -73,7 +75,11 @@ Window::Window(): note(0), in_vel(0) {
   h_layout->addWidget(label);
 
   in_vel_label = new QLabel;
+  in_vel_label->setMinimumWidth(30);
+  in_vel_label->setAlignment(Qt::AlignRight);
   h_layout->addWidget(in_vel_label);
+
+  h_layout->addStretch();
 
   v_layout->addLayout(h_layout);
 
@@ -82,6 +88,7 @@ Window::Window(): note(0), in_vel(0) {
 
   label = new QLabel;
   label->setText("gain:");
+  label->setMinimumWidth(50);
 
   h_layout->addWidget(label);
 
@@ -92,6 +99,8 @@ Window::Window(): note(0), in_vel(0) {
 
   gain_label = new QLabel;
   gain_label->setText("0 (db)");
+  gain_label->setAlignment(Qt::AlignRight);
+  gain_label->setMinimumWidth(60);
   h_layout->addWidget(gain_label);
 
   v_layout->addLayout(h_layout);
@@ -101,6 +110,7 @@ Window::Window(): note(0), in_vel(0) {
 
   label = new QLabel;
   label->setText("thresh:");
+  label->setMinimumWidth(50);
 
   h_layout->addWidget(label);
 
@@ -112,6 +122,8 @@ Window::Window(): note(0), in_vel(0) {
 
   thresh_label = new QLabel;
   thresh_label->setText("0 (db)");
+  thresh_label->setAlignment(Qt::AlignRight);
+  thresh_label->setMinimumWidth(60);
   h_layout->addWidget(thresh_label);
 
   v_layout->addLayout(h_layout);
@@ -125,7 +137,7 @@ Window::Window(): note(0), in_vel(0) {
   timer->start(20);
 
   // init jack garbage
-  /*jack_client = jack_client_open("velociraptor", JackNullOption, nullptr);
+  jack_client = jack_client_open("velociraptor", JackNullOption, nullptr);
 
   if (jack_client == nullptr)
     throw std::runtime_error("failed to initialize jack!");
@@ -152,15 +164,13 @@ Window::Window(): note(0), in_vel(0) {
     jack_client_close(jack_client);
     throw std::runtime_error("could not activate jack client!");
   }
-  */
 }
 
 Window::~Window() {
-  /*jack_deactivate(jack_client);
+  jack_deactivate(jack_client);
   jack_port_unregister(jack_client, input_port);
   jack_port_unregister(jack_client, output_port);
   jack_client_close(jack_client);
-  */
 }
 
 void Window::updateDisplay() {

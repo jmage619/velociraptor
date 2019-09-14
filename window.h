@@ -41,6 +41,7 @@ class Window: public QWidget {
     jack_client_t* jack_client;
     QLabel* note_label;
     QLabel* in_vel_label;
+    QLabel* out_vel_label;
     QSlider* gain_slider;
     QLabel* gain_label;
     QSlider* thresh_slider;
@@ -55,6 +56,7 @@ class Window: public QWidget {
     jack_port_t* output_port;
     std::atomic<int> note;
     std::atomic<int> in_vel;
+    std::atomic<int> out_vel;
     Window();
     ~Window();
 

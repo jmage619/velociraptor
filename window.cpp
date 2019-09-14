@@ -48,6 +48,7 @@ int process(jack_nframes_t nframes, void* data) {
       //cout << "note on; " << "note=" << (int) event.buffer[1] << "; vel=" << (int) event.buffer[2] << endl;
       window->note = event.buffer[1];
       window->in_vel = event.buffer[2];
+      window->out_vel = event.buffer[2];
     }
     jack_midi_event_write(midi_out_buf, event.time, event.buffer, event.size);
   }
@@ -55,7 +56,7 @@ int process(jack_nframes_t nframes, void* data) {
   return 0;
 }
 
-Window::Window(): note(0), in_vel(0) {
+Window::Window(): note(0), in_vel(0), out_vel(0) {
   QVBoxLayout* v_layout = new QVBoxLayout;
 
   // note display
@@ -78,6 +79,15 @@ Window::Window(): note(0), in_vel(0) {
   in_vel_label->setMinimumWidth(30);
   in_vel_label->setAlignment(Qt::AlignRight);
   h_layout->addWidget(in_vel_label);
+
+  label = new QLabel;
+  label->setText("out_vel:");
+  h_layout->addWidget(label);
+
+  out_vel_label = new QLabel;
+  out_vel_label->setMinimumWidth(30);
+  out_vel_label->setAlignment(Qt::AlignRight);
+  h_layout->addWidget(out_vel_label);
 
   h_layout->addStretch();
 
@@ -176,6 +186,7 @@ Window::~Window() {
 void Window::updateDisplay() {
   note_label->setText(QString::number(note));
   in_vel_label->setText(QString::number(in_vel));
+  out_vel_label->setText(QString::number(out_vel));
 }
 
 void Window::updateGainLabel(int val) {

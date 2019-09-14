@@ -46,6 +46,8 @@ class Window: public QWidget {
     QLabel* gain_label;
     QSlider* thresh_slider;
     QLabel* thresh_label;
+    QSlider* ratio_slider;
+    QLabel* ratio_label;
 
     QTimer* timer;
 
@@ -64,6 +66,7 @@ class Window: public QWidget {
     void updateDisplay();
     void updateGainLabel(int val);
     void updateThreshLabel(int val);
+    void updateRatioLabel(int val);
 };
 
 #endif

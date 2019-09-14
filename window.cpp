@@ -126,7 +126,7 @@ Window::Window(): note(0), in_vel(0), out_vel(0) {
 
   thresh_slider = new QSlider(Qt::Horizontal);
   thresh_slider->setMaximum(0);
-  thresh_slider->setMinimum(-60);
+  thresh_slider->setMinimum(-144);
   thresh_slider->setValue(0);
   h_layout->addWidget(thresh_slider);
 
@@ -138,12 +138,36 @@ Window::Window(): note(0), in_vel(0), out_vel(0) {
 
   v_layout->addLayout(h_layout);
 
+  // ratio slider
+  h_layout = new QHBoxLayout;
+
+  label = new QLabel;
+  label->setText("ratio:");
+  label->setMinimumWidth(50);
+
+  h_layout->addWidget(label);
+
+  ratio_slider = new QSlider(Qt::Horizontal);
+  ratio_slider->setMaximum(60);
+  ratio_slider->setMinimum(1);
+  ratio_slider->setValue(1);
+  h_layout->addWidget(ratio_slider);
+
+  ratio_label = new QLabel;
+  ratio_label->setText("1:1");
+  ratio_label->setAlignment(Qt::AlignRight);
+  ratio_label->setMinimumWidth(60);
+  h_layout->addWidget(ratio_label);
+
+  v_layout->addLayout(h_layout);
+
   setLayout(v_layout);
 
   timer = new QTimer(this);
   connect(timer, &QTimer::timeout, this, &Window::updateDisplay);
   connect(gain_slider, &QSlider::valueChanged, this, &Window::updateGainLabel);
   connect(thresh_slider, &QSlider::valueChanged, this, &Window::updateThreshLabel);
+  connect(ratio_slider, &QSlider::valueChanged, this, &Window::updateRatioLabel);
   timer->start(20);
 
   // init jack garbage
@@ -195,4 +219,8 @@ void Window::updateGainLabel(int val) {
 
 void Window::updateThreshLabel(int val) {
   thresh_label->setText(QString::number(val) + " (db)");
+}
+
+void Window::updateRatioLabel(int val) {
+  ratio_label->setText(QString::number(val) + ":1");
 }

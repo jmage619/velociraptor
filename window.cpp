@@ -55,7 +55,7 @@ int process(jack_nframes_t nframes, void* data) {
 				out_db = in_db;
 
 			out_db += window->gain;
-			jack_midi_data_t out = (jack_midi_data_t) roundf(127.f* powf(10.f, out_db / 20.f));
+			int out = roundf(127.f* powf(10.f, out_db / 20.f));
 			event.buffer[2] = out <= 127 ? out: 127;
 
       window->note = event.buffer[1];
@@ -138,7 +138,7 @@ Window::Window(): gain(0.f), thresh(0.f), ratio(1.f), note(0), in_vel(0), out_ve
 
   thresh_slider = new QSlider(Qt::Horizontal);
   thresh_slider->setMaximum(0);
-  thresh_slider->setMinimum(-144);
+  thresh_slider->setMinimum(-40);
   thresh_slider->setValue(0);
   h_layout->addWidget(thresh_slider);
 

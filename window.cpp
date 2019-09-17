@@ -48,15 +48,15 @@ int process(jack_nframes_t nframes, void* data) {
       int in_vel = event.buffer[2];
       //cout << "note on; " << "note=" << (int) event.buffer[1] << "; vel=" << (int) event.buffer[2] << endl;
       float in_db = 20.f * log10f(event.buffer[2] / 127.f);
-			float out_db;
+      float out_db;
       if (in_db > window->thresh)
          out_db = in_db - (1.f - 1.f / window->ratio) * (in_db - window->thresh);
-			else
-				out_db = in_db;
+      else
+        out_db = in_db;
 
-			out_db += window->gain;
-			int out = roundf(127.f* powf(10.f, out_db / 20.f));
-			event.buffer[2] = out <= 127 ? out: 127;
+      out_db += window->gain;
+      int out = roundf(127.f* powf(10.f, out_db / 20.f));
+      event.buffer[2] = out <= 127 ? out: 127;
 
       window->note = event.buffer[1];
       window->in_vel = in_vel;

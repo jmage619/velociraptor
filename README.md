@@ -17,9 +17,9 @@ Building / Installing
 velociraptor has the following dependencies:
 
 * Jack Audio Connection Kit:
-  http://jackaudio.org/
+    * http://jackaudio.org/
 * Qt 5:
-  http://doc.qt.io/qt-5/
+    * http://doc.qt.io/qt-5/
 
 From project directory run:
 ```
